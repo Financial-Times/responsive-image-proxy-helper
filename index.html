@@ -108,7 +108,13 @@
 				$scope.heightParam = $scope.height ? '&height=' + $scope.height : '';
 			}
 			$scope.$watch('uri', function() {
-				$scope.encodeduri = $scope.uri ? encodeURIComponent($scope.uri) : '';
+				var isValidURL = /http(s)?\:\/\//gi.test($scope.uri);
+
+				if (isValidURL) {
+					$scope.encodeduri = encodeURIComponent($scope.uri);
+				} else {
+					$scope.encodeduri = $scope.uri ? $scope.uri : '';
+				}
 			});
 		}
 	</script>
