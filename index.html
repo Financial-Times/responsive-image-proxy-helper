@@ -1,0 +1,204 @@
+<!doctype html>
+<html ng-app="editImage">
+<head>
+	<meta charset="utf-8" />
+	<title>Responsive Image Service URI builder</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<style>
+		html {
+			/* Set a font family on the whole document */
+			font-family: BentonSans, sans-serif;
+
+			/* Prevent navigation menus from creating
+			   extra space on sides of the page */
+			overflow-x: hidden;
+		}
+		body {
+			/* Remove space around the document */
+			margin: 0;
+		}
+	</style>
+
+	<link rel="stylesheet" href="//build.origami.ft.com/bundles/css?modules=o-fonts@^1.6.7,o-ft-icons@^2.3.6,o-grid@^3.0.0,o-forms@^1.0.0,o-techdocs@^4.0.0,o-buttons@^2.0.0" />
+
+	<style>
+		.field-small {
+			width: 60px;
+		}
+		.field-medium {
+			max-width: 200px;
+		}
+		.built-image {
+			margin-bottom: 20px;
+		}
+		.built-image img {
+			max-width: 100%;
+			border: 0;
+		}
+		a {
+			color: #2e6e9e;
+			text-decoration: none;
+		}
+		a:hover,
+		a:focus {
+			text-decoration: underline;
+		}
+		.u-mts {
+			margin-top: 5px;
+		}
+		hr {
+			border: 0;
+			border-top: 1px solid #e9decf;
+			background: none;
+		}
+		label small {
+			font-weight: normal;
+		}
+		.o-forms-group {
+			padding-left: 0;
+			padding-right: 0;
+		}
+		.built-uri {
+			background: rgba(246, 233, 216, .8);
+		}
+	</style>
+
+	<script src="//polyfill.webservices.ft.com/v1/polyfill.min.js"></script>
+	<script src="//build.origami.ft.com/bundles/js?modules=o-header@^3.0.6" async></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+	<script>
+		angular.module('editImage', [])
+			.controller('ImageController', ['$scope', ImageController])
+			.directive('selectOnClick', function () {
+			    return function (scope, element, attrs) {
+			        element[0].addEventListener('click', function() {
+			            this.select();
+			        });
+			    };
+			});
+
+		function ImageController($scope) {
+			$scope.imgsrc = '//:0';
+			$scope.widthParam = '';
+			$scope.heightParam = '';
+
+			$scope.updateImage = function() {
+				if (!$scope.uri || $scope.uri == '') {
+					alert('Please specify an image to optimise.');
+					document.getElementById('uri').focus();
+				} else {
+					$scope.imgsrc = document.getElementsByTagName('textarea')[0].value;
+				}
+			}
+			$scope.updateDimensions = function() {
+				$scope.widthParam = $scope.width ? '&width=' + $scope.width : '';
+				$scope.heightParam = $scope.height ? '&height=' + $scope.height : '';
+			}
+		}
+	</script>
+</head>
+<body ng-controller="ImageController">
+<header data-o-component="o-header" class="o-header">
+	<div class="o-header__container">
+		<div class="o-header__inner">
+			<div class="o-header__primary">
+				<div class="o-header__primary__left">
+					<a class="o-header__logo o-header__logo--ft" href="http://www.ft.com">
+						<abbr title="Financial Times">FT</abbr>
+						<h1 class="o-header__title">Responsive Image Service</h1>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+<div class="o-grid-row">
+	<div data-o-grid-colspan="12">
+		<h2>Image service URL builder</h2>
+	</div>
+</div>
+<form ng-submit="updateImage()">
+	<div class="o-grid-row">
+		<div data-o-grid-colspan="12 M6 Mpush6">
+			<div ng-hide="!uri || !source">
+				<label class="o-forms-label"><small>&nbsp;</small></label><!-- Quick and dirty way to align content with the left column -->
+				<button type="submit" class="o-buttons o-buttons--big o-buttons--standout">Preview image</button>
+				<div class="built-image u-mts">
+					<a href="{{imgsrc}}" target="_blank"><img ng-src="{{imgsrc}}" alt="" /></a>
+				</div>
+				<div class="o-forms-group">
+					<label for="optimised-image-url" class="o-forms-label">URL to the optimised image</label>
+					<small class="o-forms-additional-info">Use this pattern to serve optimised images in your product.</small>
+					<textarea id="optimised-image-url" class="built-uri o-forms-textarea" rows="4" readonly select-on-click>http://image.webservices.ft.com/v1/images/raw/{{uri}}?source={{source}}{{widthParam}}{{heightParam}}{{fit}}{{format}}{{quality}}{{compression}}</textarea>
+				</div>
+			</div>
+		</div>
+		<div data-o-grid-colspan="12 M6 Mpull6">
+			<div class="o-forms-group">
+				<label class="o-forms-label" class="o-forms-label" for="uri">Optimise this image <small><a href ng-click="uri='http://im.ft-static.com/content/images/a60ae24b-b87f-439c-bf1b-6e54946b4cf2.img'">Try with an example</a></small></label>
+				<input type="url" class="o-forms-text" id="uri" autofocus ng-model="uri" placeholder="http://im.ft-static.com/…" />
+			</div>
+			<div class="o-forms-group">
+				<label class="o-forms-label" for="source">Source:</label>
+				<small class="o-forms-additional-info">Typically, the name of your product.</small>
+				<input type="text" class="o-forms-text field-medium" id="source" ng-model="source" ng-init="source='test'" />
+			</div>
+			<div class="o-forms-group">
+				<div class="o-grid-row">
+					<div data-o-grid-colspan="2">
+						<label class="o-forms-label" for="width">Width:</label>
+						<input type="text" ng-change="updateDimensions()" class="o-forms-text field-small" id="width" placeholder="500" ng-model="width" />
+					</div>
+					<div data-o-grid-colspan="2">
+						<label class="o-forms-label" for="width">Height:</label>
+						<input type="text" ng-change="updateDimensions()" class="o-forms-text field-small" id="height" placeholder="300" ng-model="height" />
+					</div>
+				</div>
+			</div>
+			<div class="o-forms-group">
+				<hr />
+				<h3>Advanced settings:</h3>
+				<label class="o-forms-label">Fit:</label>
+				<input name="fit" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="fit" id="fit1" value="cover" ng-selected="selected" ng-value="cover"><label for="fit1" class="o-forms-label">cover (default)</label>
+				<input name="fit" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="fit" id="fit2" value="&fit=contain"><label for="fit2" class="o-forms-label">contain</label>
+				<input name="fit" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="fit" id="fit3" value="&fit=scale-down"><label for="fit3" class="o-forms-label">scale-down</label>
+			</div>
+			<div class="o-forms-group">
+				<label class="o-forms-label">Format:</label>
+				<input name="format" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="format" id="format1" value="auto" ng-selected="selected" ng-value="auto"><label for="format1" class="o-forms-label">auto (default)</label>
+				<input name="format" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="format" id="format2" value="&format=jpg"><label for="format2" class="o-forms-label">jpg</label>
+				<input name="format" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="format" id="format3" value="&format=png"><label for="format3" class="o-forms-label">png</label>
+				<input name="format" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="format" id="format4" value="&format=svg"><label for="format4" class="o-forms-label">svg</label>
+			</div>
+			<div class="o-forms-group">
+				<label class="o-forms-label">Quality:</label>
+				<input id="quality1" name="quality" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="quality" value="&quality=lowest"><label for="quality1" class="o-forms-label">lowest</label>
+				<input id="quality2" name="quality" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="quality" value="&qualitylow"><label for="quality2" class="o-forms-label">low</label>
+				<input id="quality3" name="quality" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="quality" value="medium" ng-selected="selected" ng-value="medium"><label for="quality3" class="o-forms-label">medium</label>
+				<input id="quality4" name="quality" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="quality" value="&quality=high"><label for="quality4" class="o-forms-label">high</label>
+				<input id="quality5" name="quality" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="quality" value="&quality=highest"><label for="quality5" class="o-forms-label">highest</label>
+				<input id="quality6" name="quality" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="quality" value="&quality=lossless"><label for="quality6" class="o-forms-label">lossless</label>
+			</div>
+			<div class="o-forms-group">
+				<label class="o-forms-label">Compression type:</label>
+				<input id="compression1" name="compression" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="compression" value="fast" ng-selected="selected" ng-value="fast"><label for="compression1" class="o-forms-label">fast</label>
+				<input id="compression2" name="compression" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="compression" value="&compression=best"><label for="compression2" class="o-forms-label">best (takes more time)</label>
+			</div>
+			<div class="o-forms-group">
+				<small class="o-forms-additional-info">There's more: discover the full list of available options in the <a href="http://image.webservices.ft.com/v1/#reference">API reference</a>.</small>
+			</div>
+		</div>
+	</div>
+</form>
+
+<footer class="o-techdocs-footer">
+	<div class="o-techdocs-footer__inner">
+		<p class="o-techdocs-footer__secondary"><a href="http://github.com/financial-times/ft-origami">View project on GitHub</a></p>
+		<p>&#xA9; THE FINANCIAL TIMES LTD. FT and 'Financial Times' are trademarks of The Financial Times Ltd.</p>
+		<p>This software is published under the <a href="http://opensource.org/licenses/MIT">MIT licence</a>.</p>
+	</div>
+</footer>
+</body>
+</html>
