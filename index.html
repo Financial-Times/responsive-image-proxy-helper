@@ -148,11 +148,11 @@
 			<div class="o-forms-group">
 				<div class="o-grid-row">
 					<div data-o-grid-colspan="2">
-						<label class="o-forms-label" for="width">Width:</label>
+						<label class="o-forms-label" for="width"><span ng-show="fit == '&fit=scale-down'">Maximum </span>Width:</label>
 						<input type="text" ng-change="updateDimensions()" class="o-forms-text field-small" id="width" placeholder="500" ng-model="width" />
 					</div>
 					<div data-o-grid-colspan="2">
-						<label class="o-forms-label" for="width">Height:</label>
+						<label class="o-forms-label" for="width"><span ng-show="fit == '&fit=scale-down'">Maximum </span>Height:</label>
 						<input type="text" ng-change="updateDimensions()" class="o-forms-text field-small" id="height" placeholder="300" ng-model="height" />
 					</div>
 				</div>
