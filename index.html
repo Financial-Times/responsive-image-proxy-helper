@@ -71,15 +71,27 @@
 		angular.module('editImage', [])
 			.controller('ImageController', ['$scope', ImageController])
 			.directive('selectOnClick', function () {
-			    return function (scope, element, attrs) {
-			        element[0].addEventListener('click', function() {
-			            this.select();
-			        });
-			    };
+				return function (scope, element, attrs) {
+					element[0].addEventListener('click', function() {
+						this.select();
+					});
+				};
+			}).directive('watchChange', function() {
+				return {
+					scope: {
+						onchange: '&watchChange'
+					},
+					link: function(scope, element, attrs) {
+						element.on('input', function() {
+							scope.onchange();
+						});
+					}
+				};
 			});
 
 		function ImageController($scope) {
 			$scope.imgsrc = '//:0';
+			$scope.encodeduri = '';
 			$scope.widthParam = '';
 			$scope.heightParam = '';
 
@@ -95,6 +107,9 @@
 				$scope.widthParam = $scope.width ? '&width=' + $scope.width : '';
 				$scope.heightParam = $scope.height ? '&height=' + $scope.height : '';
 			}
+			$scope.$watch('uri', function() {
+				$scope.encodeduri = $scope.uri ? encodeURIComponent($scope.uri) : '';
+			});
 		}
 	</script>
 </head>
@@ -131,7 +146,7 @@
 				<div class="o-forms-group">
 					<label for="optimised-image-url" class="o-forms-label">URL to the optimised image</label>
 					<small class="o-forms-additional-info">Use this pattern to serve optimised images in your product.</small>
-					<textarea id="optimised-image-url" class="built-uri o-forms-textarea" rows="4" readonly select-on-click>http://image.webservices.ft.com/v1/images/raw/{{uri}}?source={{source}}{{widthParam}}{{heightParam}}{{fit}}{{format}}{{quality}}</textarea>
+					<textarea id="optimised-image-url" class="built-uri o-forms-textarea" rows="4" readonly select-on-click>http://image.webservices.ft.com/v1/images/raw/{{encodeduri}}?source={{source}}{{widthParam}}{{heightParam}}{{fit}}{{format}}{{quality}}</textarea>
 				</div>
 			</div>
 		</div>
