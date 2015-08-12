@@ -131,7 +131,7 @@
 				<div class="o-forms-group">
 					<label for="optimised-image-url" class="o-forms-label">URL to the optimised image</label>
 					<small class="o-forms-additional-info">Use this pattern to serve optimised images in your product.</small>
-					<textarea id="optimised-image-url" class="built-uri o-forms-textarea" rows="4" readonly select-on-click>http://image.webservices.ft.com/v1/images/raw/{{uri}}?source={{source}}{{widthParam}}{{heightParam}}{{fit}}{{format}}{{quality}}{{compression}}</textarea>
+					<textarea id="optimised-image-url" class="built-uri o-forms-textarea" rows="4" readonly select-on-click>http://image.webservices.ft.com/v1/images/raw/{{uri}}?source={{source}}{{widthParam}}{{heightParam}}{{fit}}{{format}}{{quality}}</textarea>
 				</div>
 			</div>
 		</div>
@@ -180,11 +180,6 @@
 				<input id="quality4" name="quality" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="quality" value="&quality=high"><label for="quality4" class="o-forms-label">high</label>
 				<input id="quality5" name="quality" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="quality" value="&quality=highest"><label for="quality5" class="o-forms-label">highest</label>
 				<input id="quality6" name="quality" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="quality" value="&quality=lossless"><label for="quality6" class="o-forms-label">lossless</label>
-			</div>
-			<div class="o-forms-group">
-				<label class="o-forms-label">Compression type:</label>
-				<input id="compression1" name="compression" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="compression" value="fast" ng-selected="selected" ng-value="fast"><label for="compression1" class="o-forms-label">fast</label>
-				<input id="compression2" name="compression" type="radio" class="o-forms-radio o-forms-radio--small" ng-model="compression" value="&compression=best"><label for="compression2" class="o-forms-label">best (takes more time)</label>
 			</div>
 			<div class="o-forms-group">
 				<small class="o-forms-additional-info">There's more: discover the full list of available options in the <a href="http://image.webservices.ft.com/v1/#reference">API reference</a>.</small>
