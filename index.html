@@ -64,7 +64,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
 	<script>
 		angular.module('editImage', [])
-			.controller('ImageController', ['$scope', ImageController])
+			.controller('ImageController', ['$scope', '$location', ImageController])
 			.directive('selectOnClick', function () {
 				return function (scope, element, attrs) {
 					element[0].addEventListener('click', function() {
@@ -84,8 +84,12 @@
 				};
 			});
 
-		function ImageController($scope) {
-			$scope.imgsrc = '//:0';
+		function ImageController($scope, $location) {
+			$scope.uri = $location.search().uri ? $location.search().uri : '';
+			$scope.source = $location.search().source ? $location.search().source : 'test';
+			$scope.width = $location.search().width ? $location.search().width : '';
+			$scope.height = $location.search().height ? $location.search().height : '';
+			$scope.imgsrc = $location.search().uri ? $location.search().uri : '#void';
 			$scope.encodeduri = '';
 			$scope.widthParam = '';
 			$scope.heightParam = '';
@@ -110,6 +114,19 @@
 				} else {
 					$scope.encodeduri = $scope.uri ? $scope.uri : '';
 				}
+
+				$location.search('uri', $scope.uri);
+			});
+			$scope.$watch('source', function() {
+				$location.search('source', $scope.source);
+			});
+			$scope.$watch('height', function() {
+				$scope.updateDimensions();
+				$location.search('height', $scope.height);
+			});
+			$scope.$watch('width', function() {
+				$scope.updateDimensions();
+				$location.search('width', $scope.width);
 			});
 		}
 
@@ -175,17 +192,17 @@
 			<div class="o-forms-group">
 				<label class="o-forms-label" for="source">Source:</label>
 				<small class="o-forms-additional-info">Typically, the name of your product.</small>
-				<input type="text" class="o-forms-text field-medium" id="source" ng-model="source" ng-init="source='test'" />
+				<input type="text" class="o-forms-text field-medium" id="source" ng-model="source" />
 			</div>
 			<div class="o-forms-group">
 				<div class="o-grid-row">
 					<div data-o-grid-colspan="2">
 						<label class="o-forms-label" for="width"><span ng-show="fit == '&fit=scale-down'">Maximum </span>Width:</label>
-						<input type="number" ng-change="updateDimensions()" class="o-forms-text field-small" id="width" ng-model="width" />
+						<input type="text" class="o-forms-text field-small" id="width" ng-model="width" />
 					</div>
 					<div data-o-grid-colspan="2">
 						<label class="o-forms-label" for="width"><span ng-show="fit == '&fit=scale-down'">Maximum </span>Height:</label>
-						<input type="number" ng-change="updateDimensions()" class="o-forms-text field-small" id="height" ng-model="height" />
+						<input type="text" class="o-forms-text field-small" id="height" ng-model="height" />
 					</div>
 				</div>
 			</div>
